@@ -1,0 +1,181 @@
+---
+import styles from '../styles/page.module.css';
+const s = styles;
+import g from './GarmentDecoderTool.module.css';
+
+import shirtDressSvg    from './silhouettes/shirt-dress.svg?raw';
+import blazerSvg        from './silhouettes/blazer.svg?raw';
+import slipDressSvg     from './silhouettes/slip-dress.svg?raw';
+import trousersSvg      from './silhouettes/trousers.svg?raw';
+import aLineSkirtSvg    from './silhouettes/a-line-skirt.svg?raw';
+import oversizedCoatSvg from './silhouettes/oversized-coat.svg?raw';
+import croppedJacketSvg from './silhouettes/cropped-jacket.svg?raw';
+---
+
+<div class={g['layout-top']}>
+
+  <!-- INPUT PANEL -->
+  <div class={s['panel']}>
+    <div class={s['panel-title']}>Garment details</div>
+    <div class={s['panel-subtitle']}>Describe what you're making — the more specific, the better.</div>
+
+    <div class={s['presets-label']}>Quick examples</div>
+    <div class={s['presets-list']} data-presets-list>
+      <button data-preset="shirtdress" type="button" class={s['preset-btn']}>Shirt dress</button>
+      <button data-preset="blazer" type="button" class={s['preset-btn']}>Structured blazer</button>
+      <button data-preset="bias-skirt" type="button" class={s['preset-btn']}>Bias-cut skirt</button>
+      <button data-preset="trousers" type="button" class={s['preset-btn']}>Tailored trousers</button>
+    </div>
+
+    <p class={g['scope-disclaimer']}>Currently covers womenswear in silk, wool, cotton, and linen. Knitwear, menswear tailoring, and technical outerwear in v2.</p>
+
+    <div class={s['form-field']}>
+      <label for="gd-garment-type">Garment type (optional)</label>
+      <input id="gd-garment-type" type="text" placeholder="e.g. dress, jacket, trousers" />
+    </div>
+
+    <div class={s['form-field']}>
+      <label for="gd-fabric">Fabric (optional)</label>
+      <input id="gd-fabric" type="text" placeholder="e.g. silk charmeuse, medium-weight wool, linen" />
+    </div>
+
+    <div class={s['form-field']}>
+      <label for="gd-image-upload">Upload a photo (optional)</label>
+      <p class={g['upload-hint']}>Upload a garment photo and Claude will identify the construction. Add a description for more precision.</p>
+      <div class={g['upload-zone']} id="gd-upload-zone">
+        <input type="file" id="gd-image-upload" accept="image/jpeg,image/png,image/webp" />
+        <div class={g['upload-placeholder']} id="gd-upload-placeholder">
+          <div class={g['upload-icon']}>⊕</div>
+          <p class={g['upload-label']}>Click or drag to upload</p>
+        </div>
+        <div class={g['upload-preview-wrap']} id="gd-upload-preview-wrap" style="display:none">
+          <img id="gd-image-preview" src="" alt="Uploaded garment photo" class={g['upload-preview']} />
+          <button type="button" class={g['upload-remove']} id="gd-image-remove" aria-label="Remove image">×</button>
+        </div>
+      </div>
+    </div>
+
+    <div class={s['form-field']}>
+      <label for="gd-description">Description (required)</label>
+      <textarea id="gd-description" placeholder="Describe the garment — silhouette, details, construction complexity, any specific techniques you want to use..."></textarea>
+      <span class={s['form-hint']}>Minimum: ~20 characters, or upload a photo</span>
+    </div>
+
+    <div class={s['traveler-row']}>
+      <input id="gd-traveler" type="checkbox" />
+      <label for="gd-traveler">Traveler Mode — optimize for packability &amp; travel</label>
+      <span class={s['traveler-badge']}>Traveler</span>
+    </div>
+
+    <button id="gd-generate" class={s['btn-generate']} disabled type="button">Decode construction</button>
+
+    <div id="gd-error" class={s['error-box']} style="display:none"></div>
+  </div>
+
+  <!-- SILHOUETTE COLUMN -->
+  <div class={g['silhouette-panel']} data-silhouette-panel>
+    <div class={g['silhouette-placeholder']} data-silhouette-placeholder>Silhouette appears after generation</div>
+    <div class={g['silhouette-wrap']} data-silhouette="shirt-dress" style="display:none">
+      <Fragment set:html={shirtDressSvg} />
+      <div class={g['silhouette-label']}>shirt dress</div>
+    </div>
+    <div class={g['silhouette-wrap']} data-silhouette="blazer" style="display:none">
+      <Fragment set:html={blazerSvg} />
+      <div class={g['silhouette-label']}>blazer</div>
+    </div>
+    <div class={g['silhouette-wrap']} data-silhouette="slip-dress" style="display:none">
+      <Fragment set:html={slipDressSvg} />
+      <div class={g['silhouette-label']}>slip dress</div>
+    </div>
+    <div class={g['silhouette-wrap']} data-silhouette="trousers" style="display:none">
+      <Fragment set:html={trousersSvg} />
+      <div class={g['silhouette-label']}>trousers</div>
+    </div>
+    <div class={g['silhouette-wrap']} data-silhouette="a-line-skirt" style="display:none">
+      <Fragment set:html={aLineSkirtSvg} />
+      <div class={g['silhouette-label']}>a-line skirt</div>
+    </div>
+    <div class={g['silhouette-wrap']} data-silhouette="oversized-coat" style="display:none">
+      <Fragment set:html={oversizedCoatSvg} />
+      <div class={g['silhouette-label']}>oversized coat</div>
+    </div>
+    <div class={g['silhouette-wrap']} data-silhouette="cropped-jacket" style="display:none">
+      <Fragment set:html={croppedJacketSvg} />
+      <div class={g['silhouette-label']}>cropped jacket</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM SECTION: full-width output -->
+<div class={g['layout-bottom']}>
+
+  <div class={g['output-header']}>
+    <div class={s['panel-title']}>Breakdown</div>
+    <div class={s['panel-subtitle']}>Technical construction analysis.</div>
+  </div>
+
+  <div id="gd-empty" class={s['output-empty']}>Describe your garment to see the full technical breakdown here.</div>
+  <div id="gd-loading" class={s['output-loading']} style="display:none">Analysing construction…</div>
+
+  <div id="gd-output" class={g['output-body']} style="display:none">
+
+    <div id="gd-note" class={g['output-note']} style="display:none"></div>
+
+    <div class={s['output-section']}>
+      <span class={s['output-section-title']}>Fabric behavior</span>
+      <p id="gd-fabric-behavior" class={s['output-text']}></p>
+    </div>
+
+    <div class={s['output-section']}>
+      <span class={s['output-section-title']}>Lining</span>
+      <div class={s['lining-row']}>
+        <span id="gd-lining-badge" class="badge"></span>
+        <span id="gd-lining-type" class={s['output-text']}></span>
+      </div>
+      <p id="gd-lining-reason" class={s['card-meta']}></p>
+    </div>
+
+    <div class={s['output-section']}>
+      <span class={s['output-section-title']}>Seam types</span>
+      <div id="gd-seams" class={s['card-list']}></div>
+    </div>
+
+    <div class={s['output-section']}>
+      <span class={s['output-section-title']}>Interfacing</span>
+      <div id="gd-interfacing" class={s['card-list']}></div>
+    </div>
+
+    <div class={s['output-section']}>
+      <span class={s['output-section-title']}>Closure options</span>
+      <div id="gd-closures" class={s['card-list']}></div>
+    </div>
+
+    <div class={s['output-section']}>
+      <span class={s['output-section-title']}>Construction order</span>
+      <ol id="gd-order" class={s['steps-list']}></ol>
+    </div>
+
+    <div class={s['output-section']}>
+      <span class={s['output-section-title']}>Construction notes</span>
+      <ul id="gd-notes" class={s['notes-list']}></ul>
+    </div>
+
+    <div id="gd-traveler-section" class={`${s['output-section']} ${s['traveler-output']}`} style="display:none">
+      <span class={s['output-section-title']}>Traveler notes</span>
+      <ul id="gd-traveler-notes" class={s['notes-list']}></ul>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+import { init as initAnnotations } from './garmentAnnotations';
+import { init as initUpload } from './garmentImageUpload';
+import { init as initDecoder } from './garmentDecoder';
+
+initAnnotations();
+const { validate } = initDecoder();
+initUpload(validate);
+</script>
